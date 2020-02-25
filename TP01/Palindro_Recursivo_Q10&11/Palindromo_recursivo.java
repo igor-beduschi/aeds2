@@ -14,7 +14,7 @@
           resp = false;
       }
       else{
-         if(counter <= s.length()) resp = IsPalindromo(s,counter+1);
+         if(counter <= s.length()/2) resp = IsPalindromo(s,counter+1);
       }
 
       return resp;
