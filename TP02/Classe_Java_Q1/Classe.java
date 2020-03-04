@@ -94,12 +94,12 @@ class Personagens{
             if(!alturaLine.equals("unknown")) this.altura = Integer.parseInt(alturaLine);
 
             int massPos = linha.indexOf("mass");
-            int massFim = linha.indexOf(",",massPos);
-            String massLine = linha.substring(massPos+6,massFim);
+            int massFim = linha.indexOf(", hair_color",massPos);
+            String massLine = linha.substring(massPos+6,massFim).replace(",","");
             if(!massLine.equals("unknown")) this.peso = Double.parseDouble(massLine);
 
             int cabeloPos = linha.indexOf("hair_color");
-            int cabeloFim = linha.indexOf(",",cabeloPos);
+            int cabeloFim = linha.indexOf(", skin_color",cabeloPos);
             this.corDoCabelo = linha.substring(cabeloPos+12,cabeloFim);
 
             int pelePos = linha.indexOf("skin_color");
@@ -107,7 +107,7 @@ class Personagens{
             this.corDaPele = linha.substring(pelePos+12,peleFim-2);
 
             int olhoPos = linha.indexOf("eye_color");
-            int olhoFim = linha.indexOf(",",olhoPos);
+            int olhoFim = linha.indexOf(", birth_year",olhoPos);
             this.corDosOlhos = linha.substring(olhoPos+11,olhoFim);
 
             int nasciPos = linha.indexOf("birth_year");
@@ -130,7 +130,7 @@ class Personagens{
         System.out.printf(" ## %s ## %d ## ",this.nome,this.altura);
         if(this.peso == (long) this.peso) System.out.printf("%d ## ",(long) this.peso);
         else System.out.printf("%s ## ",this.peso);
-        System.out.printf("%s ## %s ## %s ## %s ## %s ## %s ##\n",
+        System.out.printf("%s ## %s ## %s ## %s ## %s ## %s ## \n",
         this.corDoCabelo,this.corDaPele,this.corDosOlhos,this.anoNascimento,this.genero,this.homeworld);
        
     }
