@@ -11,8 +11,8 @@
             certo = false;
             i = s.length()-1;
          }
-         if(s.charAt(i) == '(' ) counter++;
-         if(s.charAt(i) == ')' ) counter--;
+         else if(s.charAt(i) == '(' ) counter++;
+         else if(s.charAt(i) == ')' ) counter--;
       }
       if(counter != 0) certo = false;
       MyIO.println(certo ? "correto" : "incorreto");
