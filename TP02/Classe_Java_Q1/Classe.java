@@ -85,42 +85,33 @@ class Personagens{
             linha = linha.replaceAll("\'","");
 
             int namePos = linha.indexOf("name");
-            int nameFim = linha.indexOf(",");
-            this.nome = linha.substring(namePos+6,nameFim);
+            this.nome = linha.substring(namePos+6,linha.indexOf(","));
 
             int heightPos = linha.indexOf("height");
-            int heightFim = linha.indexOf(",",heightPos);
-            String alturaLine = linha.substring(heightPos+8,heightFim);
+            String alturaLine = linha.substring(heightPos+8,linha.indexOf(",",heightPos));
             if(!alturaLine.equals("unknown")) this.altura = Integer.parseInt(alturaLine);
 
             int massPos = linha.indexOf("mass");
-            int massFim = linha.indexOf(", hair_color",massPos);
-            String massLine = linha.substring(massPos+6,massFim).replace(",","");
+            String massLine = linha.substring(massPos+6,linha.indexOf(", hair_color",massPos)).replace(",","");
             if(!massLine.equals("unknown")) this.peso = Double.parseDouble(massLine);
 
             int cabeloPos = linha.indexOf("hair_color");
-            int cabeloFim = linha.indexOf(", skin_color",cabeloPos);
-            this.corDoCabelo = linha.substring(cabeloPos+12,cabeloFim);
+            this.corDoCabelo = linha.substring(cabeloPos+12,linha.indexOf(", skin_color",cabeloPos));
 
             int pelePos = linha.indexOf("skin_color");
-            int peleFim = linha.indexOf("eye_color",pelePos);
-            this.corDaPele = linha.substring(pelePos+12,peleFim-2);
+            this.corDaPele = linha.substring(pelePos+12,linha.indexOf("eye_color",pelePos)-2);
 
             int olhoPos = linha.indexOf("eye_color");
-            int olhoFim = linha.indexOf(", birth_year",olhoPos);
-            this.corDosOlhos = linha.substring(olhoPos+11,olhoFim);
+            this.corDosOlhos = linha.substring(olhoPos+11,linha.indexOf(", birth_year",olhoPos));
 
             int nasciPos = linha.indexOf("birth_year");
-            int nasciFim = linha.indexOf(",",nasciPos);
-            this.anoNascimento = linha.substring(nasciPos+12,nasciFim);
+            this.anoNascimento = linha.substring(nasciPos+12,linha.indexOf(",",nasciPos));
 
             int genderPos = linha.indexOf("gender");
-            int genderFim = linha.indexOf(",",genderPos);
-            this.genero = linha.substring(genderPos+8,genderFim);
+            this.genero = linha.substring(genderPos+8,linha.indexOf(",",genderPos));
 
             int planetaPos = linha.indexOf("homeworld");
-            int planetaFim = linha.indexOf(",",planetaPos);
-            this.homeworld = linha.substring(planetaPos+11,planetaFim);
+            this.homeworld = linha.substring(planetaPos+11,linha.indexOf(",",planetaPos));
 
             Printar();
         } catch (IOException e) {}
