@@ -113,6 +113,8 @@ class Personagens{
             int planetaPos = linha.indexOf("homeworld");
             this.homeworld = linha.substring(planetaPos+11,linha.indexOf(",",planetaPos));
 
+            arq.close();
+            lerArq.close();
             Printar();
         } catch (IOException e) {}
     }
@@ -124,6 +126,19 @@ class Personagens{
         System.out.printf("%s ## %s ## %s ## %s ## %s ## %s ## \n",
         this.corDoCabelo,this.corDaPele,this.corDosOlhos,this.anoNascimento,this.genero,this.homeworld);
        
+    }
+
+    protected Personagens clone(){
+        Personagens novo = new Personagens();
+        novo.nome = this.nome;
+        novo.altura = this.altura;
+        novo.corDoCabelo = this.corDoCabelo;
+        novo.corDaPele = this.corDaPele;
+        novo.corDosOlhos = this.corDosOlhos;
+        novo.anoNascimento = this.anoNascimento;
+        novo.genero = this.genero;
+        novo.homeworld = this.homeworld;
+        return novo;
     }
 }
 
