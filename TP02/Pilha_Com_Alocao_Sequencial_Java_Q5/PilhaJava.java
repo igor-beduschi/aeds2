@@ -141,81 +141,33 @@ class Personagens{
     }
 }
 
-class Lista {
+class Pilha {
     private Personagens array[];
     private int n;
   
-    public Lista () {
+    public Pilha () {
        this(6);
     }
   
-    public Lista (int tamanho){
+    public Pilha (int tamanho){
        array = new Personagens[tamanho];
        n = 0;
     }
   
-    public void inserirInicio(Personagens personagem){
-       if(n >= array.length){
-         System.out.println("Erro ao inserir!");
-       } 
-  
-       for(int i = n; i > 0; i--){
-          array[i] = array[i-1];
-       }
-  
-       array[0] = personagem;
-       n++;
-    }
-  
-    public void inserirFim(Personagens personagem){
-       if(n >= array.length){
+    public void Inserir(Personagens personagem){
+        if(n >= array.length){
           System.out.println("Erro ao inserir!");
-       }
-       array[n] = personagem;
-       n++;
+        } 
+        array[n] = personagem;
+        n++;
     }
   
-  
-    public void inserir(Personagens personagem, int pos){
-       if(n >= array.length || pos < 0 || pos > n){
-         System.out.println("Erro ao inserir!");
-       }
-       for(int i = n; i > pos; i--){
-          array[i] = array[i-1];
-       }
-       array[pos] = personagem;
-       n++;
-    }
-  
-    public String removerInicio(){
+    public String remover(){
        if (n == 0) {
           System.out.println("Erro ao remover!");
        }
-       String resp = array[0].getNome();
+       String resp = array[n-1].getNome();
        n--;
-       for(int i = 0; i < n; i++){
-          array[i] = array[i+1];
-       }
-       return resp;
-    }
-  
-    public String removerFim(){
-       if (n == 0) {
-          System.out.println("Erro ao remover!");
-       }  
-       return array[--n].getNome();
-    }
-  
-    public String remover(int pos){
-       if (n == 0 || pos < 0 || pos >= n) {
-         System.out.println("Erro ao remover!");
-       }
-       String resp = array[pos].getNome();
-       n--;
-  
-       for(int i = pos; i < n; i++){
-          array[i] = array[i+1];
-       }
        return resp;
     }
   
@@ -227,7 +179,7 @@ class Lista {
     }  
 }
 
-class ListaJava {
+class PilhaJava {
        
     public static boolean isFim(String s){
         return (s.length() >= 3 && s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M');
@@ -243,7 +195,7 @@ class ListaJava {
 
     public static void main (String[] args){
         String[] entrada = new String[1000];
-        Lista lista = new Lista(1000);
+        Pilha pilha = new Pilha(1000);
         Personagens personagem[] = new Personagens[1000];
         int numEntrada = 0;
         do {
@@ -255,7 +207,7 @@ class ListaJava {
         for(; i < numEntrada; i++){
             personagem[i] = new Personagens();
             personagem[i].lerArquivo(entrada[i]);
-            lista.inserirFim(personagem[i]);
+            pilha.Inserir(personagem[i]);
         }
         --i;
 
@@ -263,31 +215,13 @@ class ListaJava {
             String Comando = MyIO.readLine();
             if(Comando.charAt(0) == 'I'){
                 personagem[++i] = new Personagens();
-                if(Comando.charAt(1) == 'I'){
-                    personagem[i].lerArquivo(ISO88591toUTF8(Comando.substring(3,Comando.length())));
-                    lista.inserirInicio(personagem[i]);
-                }
-                else if(Comando.charAt(1) == 'F'){
-                    personagem[i].lerArquivo(ISO88591toUTF8(Comando.substring(3,Comando.length())));
-                    lista.inserirFim(personagem[i]);
-                }
-                else if(Comando.charAt(1) == '*'){
-                    personagem[i].lerArquivo(ISO88591toUTF8(Comando.substring(6,Comando.length())));
-                    lista.inserir(personagem[i], Integer.parseInt(Comando.substring(3,5)));
-                }
+                personagem[i].lerArquivo(ISO88591toUTF8(Comando.substring(2,Comando.length())));
+                pilha.Inserir(personagem[i]);
             }
             else if(Comando.charAt(0) == 'R'){
-                if(Comando.charAt(1) == 'I'){
-                    System.out.println("(R) "+lista.removerInicio());
-                }
-                else if(Comando.charAt(0) == 'R' && Comando.charAt(1) == 'F'){
-                    System.out.println("(R) "+lista.removerFim());
-                }
-                else if(Comando.charAt(0) == 'R' && Comando.charAt(1) == '*'){
-                    System.out.println("(R) "+lista.remover(Integer.parseInt(Comando.substring(3,5))));
-                }
+                System.out.println("(R) "+pilha.remover());
             }
         }
-        lista.mostrar();
+        pilha.mostrar();
     }
 }
