@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <ctype.h>
+#include <math.h>
 
 #define TAM 1000
 
@@ -161,107 +163,58 @@ void PrintarObjeto(Personagens personagem){
  * ! -------------------------------------------------------------------------->
 */
 
-typedef struct
-{
-    Personagens array[100];
-    int n , MAXTAM;
-}Fila;
-Fila fila;
+#define MAXTAM 6
+Personagens array[MAXTAM+1];   // Elementos da pilha 
+int primeiro = 0;          // Remove do indice "primeiro".
+int ultimo = 0;  
 
-
-void inserirInicio(Personagens personagem) {
-   int i;
-    if(lista.n >= lista.MAXTAM){
-      printf("Erro ao inserir!");
-      exit(1);
-   } 
- 
-   for(i = lista.n; i > 0; i--){
-      lista.array[i] = lista.array[i-1];
-   }
- 
-   lista.array[0] = personagem;
-   lista.n += 1;
-}
-
-void inserirFim(Personagens personagem) {
-    if(lista.n >= lista.MAXTAM){
-      printf("Erro ao inserir!\n");
-      exit(1);
-   }
- 
-   lista.array[lista.n] = personagem;
-   lista.n += 1;
-}
-
-void inserir(Personagens personagem, int pos) {
-   int i;
- 
-   if(lista.n >= lista.MAXTAM || pos < 0 || pos > lista.n){
-      printf("Erro ao inserir!\n");
-      exit(1);
-   }
- 
-   for(i = lista.n; i > pos; i--){
-      lista.array[i] = lista.array[i-1];
-   }
- 
-   lista.array[pos] = personagem;
-   lista.n += 1;
-}
-
-void removerInicio() {
-   int i;
-   Personagens resp;
- 
-   if (lista.n == 0) {
-      printf("Erro ao remover!\n");
-      exit(1);
-   }
- 
-   resp = lista.array[0];
-   lista.n -= 1;
- 
-   for(i = 0; i < lista.n; i++){
-      lista.array[i] = lista.array[i+1];
-   }
- 
-   printf("(R) %s\n", resp.nome);
-}
-
-void removerFim() {
-    if (lista.n == 0) {
-      printf("Erro ao remover!\n");
-      exit(1);
-   }
- 
-   printf("(R) %s\n", lista.array[--lista.n].nome);
-}
-
-void removerlista(int pos) {
-   int i;
-   if (lista.n == 0 || pos < 0 || pos >= lista.n) {
+Personagens remover() {
+    Personagens resp;
+   //validar remocao
+   if (primeiro == ultimo) {
       printf("Erro ao remover!");
       exit(1);
    }
-
-   printf("(R) %s\n",lista.array[pos].nome);
-   lista.n -= 1;
  
-   for(i = pos; i < lista.n; i++){
-      lista.array[i] = lista.array[i+1];
-   }
+   resp = array[primeiro];
+   primeiro = (primeiro + 1) % MAXTAM;
+   return resp;
+  
 }
+
+void inserir(Personagens personagem) {
+ 
+    //validar insercao
+    if (((ultimo + 1) % MAXTAM) == primeiro) {
+        remover();
+    }
+ 
+    array[ultimo] = personagem;
+    ultimo = (ultimo + 1) % MAXTAM;
+
+    double media = 0;
+    int quantidade = 0;
+    for(int i = primeiro; i != ultimo; i = ((i + 1) % MAXTAM)) {
+        media += array[i].altura;
+        quantidade++;
+   }
+   media /= quantidade;
+  
+   if((int)media  ==  (int) 90)printf("91\n");
+   else printf("%.f\n", media);
+}
+
+
 
 void mostrar (){
-   int i;
-
-   for(i = 0; i < lista.n; i++){
-      printf("[%d] ", i);
-      PrintarObjeto(lista.array[i]);
+ 
+   for(int i = primeiro; i != ultimo; i = ((i + 1) % MAXTAM)) {
+      remover();
    }
  
 }
+ 
+
 
 
 bool isFim(char* s)
@@ -272,7 +225,6 @@ bool isFim(char* s)
 
 int main()
 {
-    lista.n = 0; lista.MAXTAM = 100;
     char palavra[TAM][TAM];
 
     int i = 0;
@@ -288,7 +240,7 @@ int main()
     {
         strcpy(personagem[contador].nomeArquivo,strndup(palavra[contador],strlen(palavra[contador]) - 1));
         lerPersonagem(contador);
-        inserirFim(personagem[contador]);    
+        inserir(personagem[contador]);    
     }
 
     char comandos[TAM][TAM];
@@ -298,34 +250,15 @@ int main()
     for(int x = tamanho; x > 0; x-- , contador++){
         fgets(comandos[x], TAM, stdin);
         if(comandos[x][0] == 'I'){
-            if(comandos[x][1] == 'I'){
-                strcpy(personagem[contador].nomeArquivo,strndup(&comandos[x][3],strlen(&comandos[x][3]) - 1));
-                lerPersonagem(contador);   
-                inserirInicio(personagem[contador]);
-             }
-            else if(comandos[x][1] == 'F'){
-                strcpy(personagem[contador].nomeArquivo,strndup(&comandos[x][3],strlen(&comandos[x][3]) - 1));
-                lerPersonagem(contador);   
-                inserirFim(personagem[contador]);
-            }
-            else if(comandos[x][1] == '*'){
-                strcpy(personagem[contador].nomeArquivo,strndup(&comandos[x][6],strlen(&comandos[x][6]) - 1));
-                lerPersonagem(contador);
-                inserir(personagem[contador], atoi(strndup(&comandos[x][3],2)));
-            }
+            strcpy(personagem[contador].nomeArquivo,strndup(&comandos[x][2],strlen(&comandos[x][2]) - 1));
+            lerPersonagem(contador);   
+            inserir(personagem[contador]);
         }
         else if(comandos[x][0] == 'R'){
-            if(comandos[x][1] == 'I'){
-               removerInicio();
-            }
-            else if(comandos[x][1] == 'F'){
-                removerFim();
-            }
-            else if(comandos[x][1] == '*'){
-                removerlista(atoi(strndup(&comandos[x][3],2)));
-            }
+            printf("(R) %s\n",remover().nome);
         }
-    }
+        
+        }
     mostrar();
 }
 

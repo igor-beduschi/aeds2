@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -164,9 +165,13 @@ void PrintarObjeto(Personagens personagem){
 typedef struct
 {
     Personagens array[100];
-    int n , MAXTAM;
+    int n ,comparacoes, MAXTAM;
 }Lista;
 Lista lista;
+
+void incrementarContador(int n){
+    lista.comparacoes += n;
+}
 
 
 void inserirInicio(Personagens personagem) {
@@ -253,6 +258,63 @@ void removerlista(int pos) {
    }
 }
 
+int diferenca(char* um, char* dois){
+    int tamanho1 = strlen(um)-1;
+    int tamanho2 = strlen(dois);
+    int resp = 0;
+    if(tamanho1 <= tamanho2){
+        for(int a = 0; tamanho1 > a; a++){
+            if(um[a] > dois[a]){
+                resp = 1;
+                a = tamanho1;
+            } 
+            else if(um[a] < dois[a]){
+                resp = -1;
+                a = tamanho1;
+            }
+        }
+    }
+    else{
+        for(int a = 0; tamanho2 > a; a++){
+            if(um[a] > dois[a]){
+                resp = 1;
+                a = tamanho2;
+            } 
+            else if(um[a] < dois[a]){
+                resp = -1;
+                a = tamanho2;
+            }
+        }
+    }
+    return resp;
+}
+
+int PesquisaBinaria ( Lista lista, char* existe , int N)
+{
+    int inf,sup,meio;
+    inf=0;
+    sup=N-1;
+    while (inf<=sup)
+    {
+        incrementarContador(1);
+        meio=(inf+sup)/2;
+        if (diferenca(existe, lista.array[meio].nome) == 0){
+            incrementarContador(1);
+            return meio;
+        }
+        else if (diferenca(existe, lista.array[meio].nome) < 0){
+           incrementarContador(1);
+            sup=meio-1;
+        }
+        else{
+            incrementarContador(2);
+            inf=meio+1;
+        }
+    }
+    incrementarContador(1);
+    return -1;
+}
+
 void mostrar (){
    int i;
 
@@ -272,7 +334,9 @@ bool isFim(char* s)
 
 int main()
 {
-    lista.n = 0; lista.MAXTAM = 100;
+    clock_t Ticks[2];
+    Ticks[0] = clock();
+    lista.n = 0; lista.MAXTAM = 100;lista.comparacoes = 0;
     char palavra[TAM][TAM];
 
     int i = 0;
@@ -291,9 +355,25 @@ int main()
         inserirFim(personagem[contador]);    
     }
 
-    char comandos[TAM][TAM];
-    fgets(comandos[0], TAM, stdin);
-    int tamanho = atoi(comandos[0]);
+    int nomesQ = 0;
+    char nomeE[TAM][TAM];
+    do                                              //preencher a matriz
+    {
+        fgets(nomeE[nomesQ], TAM, stdin);
+    } while (isFim(nomeE[nomesQ++]) == false);
+    for (int z = 0 ; z < nomesQ-1; z++)
+    {
+        if(PesquisaBinaria(lista,nomeE[z],lista.n) == -1) printf("NAO\n");
+        else printf("SIM\n");
+    }
+
+
+    FILE *pont_arq;
+    pont_arq = fopen("659318_binaria.txt", "w");
+    Ticks[1] = clock();
+    double Tempo = (Ticks[1] - Ticks[0]) * 1000.0 / CLOCKS_PER_SEC;
+    fprintf(pont_arq,"659318\t%f\t%d",Tempo,lista.comparacoes);
+    fclose(pont_arq);
 
 }
 
