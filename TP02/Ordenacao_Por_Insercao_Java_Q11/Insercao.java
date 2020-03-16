@@ -143,11 +143,9 @@ class Personagens{
 
 class Comparacoes{
     private int comparacoes;
-    private int movimentacoes;
     
     Comparacoes(){
         comparacoes = 0;
-        movimentacoes = 0;
     }
 
     public int getComparacoes() {
@@ -160,17 +158,7 @@ class Comparacoes{
         comparacoes += a;
     }
 
-    public int getMovimentacoes() {
-        return movimentacoes;
-    }
-    public void incrementarMovimentacoes(){
-        movimentacoes += 1;
-    }
-    public void incrementarMovimentacoes(int a){
-        movimentacoes += a;
-    }
 }
-
 
 class Lista {
     private Personagens array[];
@@ -189,10 +177,6 @@ class Lista {
   
     public int getContador(){
         return contador.getComparacoes();
-    }
-
-    public int getMov(){
-        return contador.getMovimentacoes();
     }
   
     public void inserirFim(Personagens personagem) throws Exception {
@@ -224,92 +208,64 @@ class Lista {
            array[i].Printar();
         }
     }  
-    public void mostrar2(){
+    public void mostrar2 (){
         for(int i = 0; i < n; i++){
            array[i].Printar();
         }
     }  
 
-    public boolean Maior(Personagens a,Personagens b){
-        boolean resp = false;
-        if(a.getAltura() == b.getAltura() && a.getNome().compareTo(b.getNome()) > 0) resp = true;
-        if(a.getAltura() > b.getAltura()) resp = true;
+    public int diferenca(String um, String dois){
+        int tamanho1 = um.length();
+        int tamanho2 = dois.length();
+        int resp = 0;
+        if(tamanho1 <= tamanho2){
+            for(int a = 0; tamanho1 > a; a++){
+                if(um.charAt(a) > dois.charAt(a)){
+                    resp = 1;
+                    a = tamanho1;
+                } 
+                else if(um.charAt(a) < dois.charAt(a)){
+                    resp = -1;
+                    a = tamanho1;
+                }
+            }
+        }
+        else{
+            for(int a = 0; tamanho2 > a; a++){
+                if(um.charAt(a) > dois.charAt(a)){
+                    resp = 1;
+                    a = tamanho2;
+                } 
+                else if(um.charAt(a) < dois.charAt(a)){
+                    resp = -1;
+                    a = tamanho2;
+                }
+            }
+        }
         return resp;
     }
 
-    public void Swap(int i, int j) {
-        Personagens temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-        contador.incrementarMovimentacoes(3);
-     }
-
-    public void ConstroiHeap(int tamHeap){
-        for(int i = tamHeap; i > 1 && Maior(array[i] , array[i/2]); i /= 2){
-            contador.incrementarComparacoes(3);
-            Swap(i, i/2);
-        }
-        contador.incrementarComparacoes();
-    }
-
-    public void Reconstroi(int tamHeap){
-        int i = 1, filho;
-        while(i <= (tamHeap/2)){
-   
-           if (Maior(array[2*i] , array[2*i+1]) || 2*i == tamHeap){
-              filho = 2*i;
-           } else {
-              filho = 2*i + 1;
-           }
-           contador.incrementarComparacoes();
-           if(Maior(array[filho] , array[i])){
-              Swap(i, filho);
-              i = filho;
-           }else{
-              i = tamHeap;
-           }
-           contador.incrementarComparacoes();
-        }
-    }
-
-    public void Heapsort() {
-        Personagens[] tmp = new Personagens[n+1];
-        for(int i = 0; i < n; i++){
-           tmp[i+1] = array[i];
-           contador.incrementarComparacoes();
-           contador.incrementarMovimentacoes();
-        }
-        contador.incrementarComparacoes();
-        array = tmp;
-   
-        for(int tamHeap = 2; tamHeap <= n; tamHeap++){
-            ConstroiHeap(tamHeap);
+    public void insercao() {
+        for (int i = 1; i < n; i++) {
+            Personagens tmp = array[i];
+            int j = i - 1;
+       
+            while ((j >= 0) && diferenca(array[j].getAnoNascimento(), tmp.getAnoNascimento()) > 0) {
+               array[j + 1] = array[j];
+               j--;
+               contador.incrementarComparacoes();
+            }
+            array[j + 1] = tmp;
             contador.incrementarComparacoes();
+       
         }
-        contador.incrementarComparacoes();
-   
-        int tamHeap = n;
-        while(tamHeap > 1){
-           Swap(1, tamHeap--);
-           Reconstroi(tamHeap);
-           contador.incrementarComparacoes();
-        }
-        contador.incrementarComparacoes();
-   
-        tmp = array;
-        array = new Personagens[n];
-        for(int i = 0; i < n; i++){
-           array[i] = tmp[i+1];
-           contador.incrementarComparacoes();
-           contador.incrementarMovimentacoes();
-        }
-        contador.incrementarComparacoes();
+        contador.incrementarComparacoes(3);
         mostrar2();
-     }
+    }
 }  
   
 
-class Heap {
+class Insercao {
        
     public static boolean isFim(String s){
         return (s.length() >= 3 && s.charAt(0) == 'F' && s.charAt(1) == 'I' && s.charAt(2) == 'M');
@@ -341,12 +297,12 @@ class Heap {
             lista.inserirFim(personagem[i]);
         }
        
-        lista.Heapsort();
+        lista.insercao();
 
         long fim  = System.currentTimeMillis();
-        FileWriter arq = new FileWriter("659318_heapsort.txt");
+        FileWriter arq = new FileWriter("659318_insercao.txt");
         PrintWriter gravarArq = new PrintWriter(arq);
-        gravarArq.printf("659318\t%d\t%d\t%d",fim-inicio,lista.getContador(),lista.getMov());
+        gravarArq.printf("659318\t%d\t%d",fim-inicio,lista.getContador());
 
         arq.close();
     }
