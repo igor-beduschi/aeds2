@@ -295,6 +295,38 @@ int main()
     fgets(comandos[0], TAM, stdin);
     int tamanho = atoi(comandos[0]);
 
+    for(int x = tamanho; x > 0; x-- , contador++){
+        fgets(comandos[x], TAM, stdin);
+        if(comandos[x][0] == 'I'){
+            if(comandos[x][1] == 'I'){
+                strcpy(personagem[contador].nomeArquivo,strndup(&comandos[x][3],strlen(&comandos[x][3]) - 1));
+                lerPersonagem(contador);   
+                inserirInicio(personagem[contador]);
+             }
+            else if(comandos[x][1] == 'F'){
+                strcpy(personagem[contador].nomeArquivo,strndup(&comandos[x][3],strlen(&comandos[x][3]) - 1));
+                lerPersonagem(contador);   
+                inserirFim(personagem[contador]);
+            }
+            else if(comandos[x][1] == '*'){
+                strcpy(personagem[contador].nomeArquivo,strndup(&comandos[x][6],strlen(&comandos[x][6]) - 1));
+                lerPersonagem(contador);
+                inserir(personagem[contador], atoi(strndup(&comandos[x][3],2)));
+            }
+        }
+        else if(comandos[x][0] == 'R'){
+            if(comandos[x][1] == 'I'){
+               removerInicio();
+            }
+            else if(comandos[x][1] == 'F'){
+                removerFim();
+            }
+            else if(comandos[x][1] == '*'){
+                removerlista(atoi(strndup(&comandos[x][3],2)));
+            }
+        }
+    }
+    mostrar();
 }
 
 
